@@ -1,3 +1,5 @@
 /static/data
 /static/img
 /static/txt
+/.vscode
+/__pycache__
