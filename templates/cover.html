@@ -1,0 +1,106 @@
+{% extends 'resume.html' %}
+{% block cover %}
+  
+<page size="A4">
+    <div class="container">
+      <div class="leftPanel" style="background-color:black !important; color:white !important">
+        <img src="{{ url_for('static', filename='photo.jpg') }}"/>
+        <div class="details" >
+            <div class="item bottomLineSeparator">
+                <h1 class="bolded white">
+                  {{ data['user'][0]["FirstName"] }} {{ data['user'][0]["LastName"] }}
+                </h1>
+                <div class="smallText">
+                  <h3>
+                    Santé, Équité et Technologies
+                  </h3>
+                </div>
+              </div>
+          <div class="item bottomLineSeparator">
+            
+            <h2>
+              Coordonnées
+            </h2>
+            <div class="smallText">
+              <p>
+                <i class="fa fa-phone contactIcon" aria-hidden="true"></i>
+                {{ data['user'][0]["Phone"] }}
+              </p>
+              <p>
+                <i class="fa fa-envelope contactIcon" aria-hidden="true"></i>
+                <a href="{{ data['user'][0]['Email'] }}" style="color:white">
+                  {{ data['user'][0]["Email"] }}
+                </a>
+              </p>
+              <p>
+                <i class="fa fa-map-marker contactIcon" aria-hidden="true"></i>
+                {{ data['user'][0]["City"] }}
+              </p>
+            </div>
+          </div>
+
+
+          
+        </div>
+        
+      </div>
+      <div class="rightPanel cover smallText">
+            <!--div class="spacer"></div-->
+            <div class="topright">
+              <p>{{ org['Organisation'] }}</p>
+              <p>{{ org['Adresse'] }}</p>
+            </div>
+            <div class="spacer"></div>
+            <p class="bolded ">
+              Le {{ date }},
+            </p>
+              <p class="bolded">
+                Objet: Candidature pour un poste de {{ org['Poste'].lower() }}
+              </p>
+              
+            <p>
+              {% if org['Responsable'] %}
+                À l'attention de {{ org['Responsable'] }},
+              {% else %}
+                Au responsable des ressources humaines,
+              {% endif %}
+            </p>
+
+            <p>Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste de {{ org['Poste'] }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
+            </p>
+            <p>
+              Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0] }}, {{ highlighted_skills[1] }} et {{ highlighted_skills[2] }} qui me seront utiles pour le poste de {{ org['Poste'].lower() }}. 
+              Différentes expériences m'ont permis de développer ces compétences. 
+              Mes compétences en {{skilled[0]["Titre"].lower()}} se sont développés {{skilled[0]["Description"]}}
+              J'ai aussi acquis des compétences en {{skilled[1]["Titre"].lower()}} {{skilled[1]["Description"]}}
+              Enfin, mes compétences en {{skilled[2]["Titre"].lower()}} se sont développées {{skilled[2]["Description"]}}            
+            </p>
+          <p>{{ org["Filler"] }}</p>
+
+
+            <!--
+            {% for line in text[1:] %}
+            {% if line.startswith('-') %}
+            <li>
+              {{ line[1:] }}
+            </li>
+            {% else %}
+            <p>
+              {{ line }}
+            </p>
+            {% endif %}
+            {% endfor %}-->
+            <p>Je vous remercie vivement de l'attention que vous porterez à ma candidature et je reste à votre disposition pour toute information complémentaire ou pour convenir d'un entretien. 
+            </p>
+            <p>Au plaisir de vous rencontrer,
+            </p>
+            <p>
+                Maxe F. Giguère
+                </p>
+            <img style="width:8cm" src="{{ url_for('static', filename='signature.png') }}"/>
+        </div>
+        </div>
+      </div>
+    </div>
+  </page>
+{% endblock %}
