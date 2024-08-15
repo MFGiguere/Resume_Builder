@@ -4,7 +4,7 @@
 <page size="A4">
     <div class="container">
       <div class="leftPanel" style="background-color:black !important; color:white !important">
-        <img src="{{ url_for('static', filename='photo.jpg') }}"/>
+        <img src="{{ url_for('static', filename='img/photo.jpg') }}"/>
         <div class="details" >
             <div class="item bottomLineSeparator">
                 <h1 class="bolded white">
@@ -47,49 +47,46 @@
       <div class="rightPanel cover smallText">
             <!--div class="spacer"></div-->
             <div class="topright">
-              <p>{{ org['Organisation'] }}</p>
-              <p>{{ org['Adresse'] }}</p>
+              <p>{{ org['Organization'] }}</p>
+              <p>{{ org['Adress'] }}</p>
             </div>
             <div class="spacer"></div>
             <p class="bolded ">
               Le {{ date }},
             </p>
               <p class="bolded">
-                Objet: Candidature pour un poste de {{ org['Poste'].lower() }}
+                Objet: Candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}
               </p>
               
             <p>
-              {% if org['Responsable'] %}
-                À l'attention de {{ org['Responsable'] }},
+              {% if org['HR'] %}
+                À l'attention de {{ org['HR'] }},
               {% else %}
                 Au responsable des ressources humaines,
               {% endif %}
             </p>
-
-            <p>Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste de {{ org['Poste'] }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
+            
+            {% if org['Type'] == "generic" %}
+            <p>Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste 
+              {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
             </p>
+            
             <p>
-              Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0] }}, {{ highlighted_skills[1] }} et {{ highlighted_skills[2] }} qui me seront utiles pour le poste de {{ org['Poste'].lower() }}. 
-              Différentes expériences m'ont permis de développer ces compétences. 
-              Mes compétences en {{skilled[0]["Titre"].lower()}} se sont développés {{skilled[0]["Description"]}}
-              J'ai aussi acquis des compétences en {{skilled[1]["Titre"].lower()}} {{skilled[1]["Description"]}}
-              Enfin, mes compétences en {{skilled[2]["Titre"].lower()}} se sont développées {{skilled[2]["Description"]}}            
+              Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0].lower() }}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }} qui me seront utiles pour le poste de {{ org['Job'].lower() }}. 
+              Mes {{skilled[0]["Type"].lower()}} en {{skilled[0]["Title"].lower()}} se sont développés {{skilled[0]["Description"]}}
+              J'ai aussi acquis des {{skilled[1]["Type"].lower()}} en {{skilled[1]["Title"].lower()}} {{skilled[1]["Description"]}}
+              Enfin, mes {{skilled[2]["Type"].lower()}} de {{skilled[2]["Title"].lower()}} se sont développées {{skilled[2]["Description"]}}            
             </p>
           <p>{{ org["Filler"] }}</p>
-
-
-            <!--
+          {% else %}
             {% for line in text[1:] %}
-            {% if line.startswith('-') %}
-            <li>
-              {{ line[1:] }}
-            </li>
-            {% else %}
-            <p>
-              {{ line }}
-            </p>
-            {% endif %}
-            {% endfor %}-->
+              <p class="mb">
+                {{ line|safe }}
+              </p>
+            {% endfor %}
+          {% endif %}
+
+
             <p>Je vous remercie vivement de l'attention que vous porterez à ma candidature et je reste à votre disposition pour toute information complémentaire ou pour convenir d'un entretien. 
             </p>
             <p>Au plaisir de vous rencontrer,
@@ -97,7 +94,7 @@
             <p>
                 Maxe F. Giguère
                 </p>
-            <img style="width:8cm" src="{{ url_for('static', filename='signature.png') }}"/>
+            <img style="width:8cm" src="{{ url_for('static', filename='img/signature.png') }}"/>
         </div>
         </div>
       </div>

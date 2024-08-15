@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simple.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/common.css') }}">
+  <title>FGIGUERE_{{ idKey }}</title>
+</head>
+<page>
+<div>
+  
+</div>
+<div class="header">{{ data['user'][0]['FirstName'] }} {{ data['user'][0]['LastName'] }}
+  <p class="title"><i class="fa fa-phone contactIcon" aria-hidden="true"> {{ data['user'][0]["Phone"] }}</i>
+  <i class="fa fa-envelope contactIcon" aria-hidden="true"> <a href="{{ data['user'][0]['Email'] }}">{{ data['user'][0]["Email"] }}</a></i>
+  <i class="fa fa-map-marker contactIcon" aria-hidden="true"> {{ data['user'][0]["City"] }}</i></p></div>
+
+<body>
+  {% block cover %}
+  {% endblock %}
+  </page>
+  <page>
+  <div class="content">
+
+    <h2>Études</h2>
+    {% for post in data["experiences"] if post["Type"] == "etude" and not post["Title"] in skips %}
+    <p class="mb"><div class="line"><span><b>{{ post["Title"] }}</b> ({{ post['Tasks'] }}/4,33)</span>
+    <span style="text-align:right"><i style="text-align:right">{{ post['Organization'] }}</i>, {{ post['StartDate'][:4] }} à {% if post['EndDate'] != "9999" %}{{ post['EndDate'][:4] }}{% else %}auj.  {% endif %}</span></div>
+    <!--i>{{ post['Organization'] }}</i>{% if post['Supervisor'] %}, sous {{ post['Supervisor'] }}{% endif %}</p-->
+    <p>{% if post['Langues'] %}<b>Prix et bourses</b>: {{ post['Langues'] }}{% endif %}</p>
+    {% endfor %}
+
+    <h2>Certifications</h2>
+    {% for post in data["experiences"] if post["Type"] == "certification"%}
+    <div class="line"><span><b>{{ post["Title"] }}</b></span>
+      <span><i style="text-align:right">{{ post['Organization'] }}</i>, {{ post['StartDate'][:4] }}</span></div>
+    {% endfor %}
+
+    <h2>Expériences</h2>
+    
+    {% for post in emplois[:5] %}
+    <div class="nb"><div class="line"><b>{{ post["Title"] }}</b>
+    <span style="text-align:right">{{ post['StartDate'][:4] }} à {% if post['EndDate'][:4] != "9999" %}{{ post['EndDate'][:4] }}{% else %}auj.  {% endif %}</span></div><p>{{ post['Time'] }}. <i>{{ post['Organization'] }}</i></p>
+    <ul class="mb">
+      {% set list1 = post['Tasks'].split('., ') %}
+      {% for item in list1 %}
+          <li style="text-align:justify">{{ item }}</li>
+      {% endfor %} 
+    </ul>
+  </div>
+    {% endfor %}
+    
+    
+    <h2>Communications et publications</h2>
+    <h3>Conférences</h3>
+    {% for post in data["communications"] if post["Type"] == "Conférence" or post["Type"] == "Affiche" %}
+    <p class="smb">{% if post['Authors'] %}{{ post['Authors'] }}{% else %}Giguère, M. F.{% endif %} ({{ post['Date'][:4] }}). <a href="{{post['Url']}}">{{ post['Title'] }}</a>. <i>{{ post['Organization'] }}</i>{% if post['Context'] %} [{{ post['Context'] }}]{% endif %}, {{ post['Location'] }}.</p>
+    {% endfor %}
+    
+      <h3>Publications</h3>
+    {% for post in data["communications"] if post["Type"] == "Article"%}
+    <p class="smb">{% if post['Authors'] %}{{ post['Authors'] }}{% else %}Giguère, M. F.{% endif %} ({{ post['Date'][:4] }}). <a href="{{post['Url']}}">{% if post["Type"] == "Ouvrage" %}<i>{{ post['Title'] }}</i>{% else %}{{ post['Title'] }}{% endif %}</a>. {% if post["Type"] != "Ouvrage" %}<i>{{ post['Organization'] }}</i>{% else %}{{ post['Organization'] }}{% endif %}{% if post['Context'] %} [{{ post['Context'] }}]{% endif %}.</p>
+    {% endfor %}
+
+    {% if data["projects"] %}
+      <h2>Projets technologiques</h2>
+      {% for post in data["projects"][:5] %}
+      <div class="line"><span><b>{{ post["Title"] }}</b> ({{ post["Lang"] }})</span>
+        <span style="text-align:right">{{ post['StartDate'][:4] }} à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}</span></div><p><i>{{ post['Organization'] }}</i></p>
+        <p class="mb">{{ post['Description'] | safe }}</p>
+        {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  </div>
+  </page>
+<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+</body>

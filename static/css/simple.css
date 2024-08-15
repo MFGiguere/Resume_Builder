@@ -1,0 +1,78 @@
+.header {
+    position: running(nameRunning);
+  }
+
+.footer {
+    position: running(themeRunning);
+}
+
+body, .ytick {
+    text-align:justify;
+    font-size: 12pt;
+    font-family:'Times New Roman', Times, serif;
+}
+
+.content {
+    text-align-last: auto;
+    white-space: pre-wrap;
+    break-before: avoid;
+}
+
+.line {
+    display:flex; 
+    justify-content: space-between;
+}
+
+.title {
+    display:flex; 
+    justify-content: space-around;
+}
+
+.nb {
+    break-inside: avoid;
+}
+.mb {
+    margin-bottom: 12px;
+}
+
+.smb {
+    margin-bottom: 6px;
+}
+
+h2 {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size:16pt;
+}
+
+p, span, ul {
+    margin:0;
+}
+
+.pagedjs_pages {
+    display:flex;
+    flex-wrap: wrap; 
+}
+
+page {
+    page-break-before: always;
+}
+
+@page {
+    margin: 0.5in;
+    size: 8.5in 11in;
+    
+
+    @bottom-right {
+        content: counter(page) ' de ' counter(pages);
+    }
+
+    @top-center {
+        content: element(nameRunning);
+      }
+  
+      @bottom-left {
+          text-transform: capitalize;
+          content: element(themeRunning);
+      }
+}

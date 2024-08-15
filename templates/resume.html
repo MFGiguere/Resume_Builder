@@ -5,7 +5,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Julius+Sans+One&family=Open+Sans&family=Source+Sans+Pro&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static/css', filename='cv.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/funky.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/common.css') }}">
 </head>
 
 <body>
@@ -46,18 +47,18 @@
             </h2>
             <div class="smallText">
                 {% for post in data["skills"] if post["Theme"] == "competences" or post["Theme"] == "technical" %}
-                {% if post["Titre"] in highlighted_skills[:3] %}
+                {% if post["Title"] in highlighted_skills[:3] %}
                   <div class="skill bolded white"  style="margin-bottom:4px">
                 {% else %}
                   <div class="skill"  style="margin-bottom:4px">
                 {% endif %}
                     
                         <div>
-                            <span>{{ post["Titre"] }}</span>
+                            <span>{{ post["Title"] }}</span>
                         </div>
                         <div class="yearsOfExperience">
-                        <span class="alignright">{{ post["Years"] }}</span>
-                        <span class="alignleft">an{% if not post["Years"] == 1 %}s{% endif %}</span>
+                        <span class="alignright">{{ post["YoE"] }}</span>
+                        <span class="alignleft">an{% if not post["YoE"] == 1 %}s{% endif %}</span>
                         </div>
                     </div>
 
@@ -76,14 +77,14 @@
               Éducation
             </h2>
 
-            {% for post in data["experiences"] if post["Type"] == "etude" and not post["Titre"] in skips %}
+            {% for post in data["experiences"] if post["Type"] == "etude" and not post["Title"] in skips %}
             
             <div class="smallText">
               <span class="bolded white" >
-                {{ post['Titre'] }}                
+                {{ post['Title'] }}                
               </span>
               <p style="margin-bottom:16px">
-                {{ post['Organisation'] }}
+                {{ post['Organization'] }}
                 <!--, {{ post['StartDate'][:4] }} à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}-->
               </p>
             </div>
@@ -123,11 +124,11 @@
             Expériences
           </h2>
           <ul>
-          {% for post in emplois[:6] if post["Titre"] not in skips %}
+          {% for post in emplois[:FirstPage] if post["Title"] not in skips %}
             <li>
               <div class="jobPosition">
                 <span class="bolded">
-                  {{ post['Titre'] }}
+                  {{ post['Title'] }}
                 </span> 
                 <span>
                   {{ post['StartDate'][:4] }} à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}
@@ -135,7 +136,7 @@
               </div>
               <div class="projectName">
                 <span>
-                  {{ post['Organisation'] }}
+                  {{ post['Organization'] }}
                 </span> <span>({{ post['Time'] }})</span>
               </div>
               <div class="smallText" style="margin-bottom:0px">
@@ -169,15 +170,15 @@
           {% for post in data["skills"] if post["Theme"] == "award"%}
           <div class="smallText">
             <div>
-              <span class="bolded white">{{ post["Titre"] }}</span>
+              <span class="bolded white">{{ post["Title"] }}</span>
             </div>
             <div class="skill">
               <div>
-                  <span>{{ post['Organisation'] }}</span>
+                  <span>{{ post['Organization'] }}</span>
               </div>
-              <div class="yearsOfExperience">
+              <div class="YoEOfExperience">
               <span class="alignright"></span>
-              <span class="alignleft">{{ post['Years'][:4] }}</span>
+              <span class="alignleft">{{ post['YoE'][:4] }}</span>
               </div>
           </div></div>
           {% endfor %}
@@ -191,13 +192,13 @@
         {% for post in data["experiences"] if post["Type"] == "certification"%}
         <div class="smallText">
         <div>
-          <span class="bolded white">{{ post["Titre"] }}</span>
+          <span class="bolded white">{{ post["Title"] }}</span>
         </div>
         <div class="skill">
           <div>
-              <span>{{ post['Organisation'] }}</span>
+              <span>{{ post['Organization'] }}</span>
           </div>
-          <div class="yearsOfExperience">
+          <div class="YoEOfExperience">
           <span class="alignright"></span>
           <span class="alignleft">{{ post['StartDate'][:4] }}</span>
           </div>
@@ -216,7 +217,7 @@
           {% for post in data["communications"][:10] %}
               <div class="jobPosition">
                 <span class="bolded">
-                  {{ post['Titre'] }}
+                  {{ post['Title'] }}
                 </span>
                 <span>
                   {{ post['Date'][:4] }} 
@@ -224,7 +225,7 @@
               </div>
               <div class="projectName smallText">
                 <span>
-                  {{ post['Type'] }}, pour <i>{{ post['Organisation'] }}</i>
+                  {{ post['Type'] }}, pour <i>{{ post['Organization'] }}</i>
                 </span>
               </div>
             {% endfor %}
@@ -238,7 +239,7 @@
           {% for post in data["projects"][:5] %}
           <div class="jobPosition">
             <span class="bolded">
-              {{ post['Titre'] }}
+              {{ post['Title'] }}
             </span>
             <span>
               {{ post['StartDate'][:4] }} {% if post['EndDate'][:4] != post['StartDate'][:4] %}à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}{% endif %}
@@ -246,7 +247,7 @@
           </div>
           <div class="jobPosition">
             <span class="bolded">
-              {{ post['Organisation'] }}
+              {{ post['Organization'] }}
             </span>
             <span>
               <i>{{ post['Languages'] }}</i>

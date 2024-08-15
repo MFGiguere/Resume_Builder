@@ -1,0 +1,21 @@
+.topright {
+    text-align:right;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: flex-end;
+  }
+
+  .topright p {
+    text-align:right;
+    margin:0px;
+    width: 40%;
+  }
+
+  .spacer {
+    margin-bottom:2cm;
+  }
+  
+  .bolded {
+    font-weight: bold;
+  }
