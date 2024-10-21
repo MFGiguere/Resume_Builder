@@ -23,6 +23,11 @@ body, .ytick {
     justify-content: space-between;
 }
 
+.line > :nth-child(2) {
+    width:19ch; 
+    text-align:left;
+}
+
 .title {
     display:flex; 
     justify-content: space-around;
@@ -58,11 +63,14 @@ page {
     page-break-before: always;
 }
 
+[data-align-last-split-element='justify'] {
+    text-align-last: auto !important;
+}
+
 @page {
     margin: 0.5in;
     size: 8.5in 11in;
     
-
     @bottom-right {
         content: counter(page) ' de ' counter(pages);
     }

@@ -1,3 +1,12 @@
 @page {
     margin: 2cm;
 }
+
+h2, h3 {
+    margin-bottom:6px;
+    margin-top:12px;
+}
+
+.nmt {
+    margin-top:0px;
+}

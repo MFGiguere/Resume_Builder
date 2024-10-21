@@ -6,13 +6,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simple.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/frq.css') }}">
-  <title>{{ data['user'][0]['FirstName'][0] }}{{ data['user'][0]['LastName'] }}_{{ data['user'][0]['FRQ'] }}_{{ item }}</title>
+  {% if crsh %}<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/crsh.css') }}">{% endif %}
+  {% if crsh %}<title>{{ data['user'][0]['FirstName'][0] }}{{ data['user'][0]['LastName'] }}_crsh_{{ item }}</title>
+  {% else %}<title>{{ data['user'][0]['FirstName'][0] }}{{ data['user'][0]['LastName'] }}_{{ data['user'][0]['FRQ'] }}_{{ item }}</title>
+  {% endif %}
 </head>
 <body>
   <page>
-<div class="header">{{ data['user'][0]['FirstName'] }} {{ data['user'][0]['LastName'] }}</div>
+<div class="header">Maxime Fleury-Giguère</div>
 <div class="footer">{{ item }}</div>
   {% block content %}
+  <div class="content">
+  {% for entry in texts[variable] %}
+  <p class="smb" style="break-inside:avoid">{{ entry|safe }}</p>
+  {% endfor %}
+  </div>
   {% endblock %}
 </page>
 <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>

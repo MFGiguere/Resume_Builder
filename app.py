@@ -7,8 +7,8 @@ flask run
 from flask import Flask, render_template
 import csv, os, locale
 from datetime import datetime
-import plotly.figure_factory as ff
-import plotly.express as px
+#import plotly.figure_factory as ff
+#import plotly.express as px
 from textwrap import wrap
 
 locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
@@ -39,6 +39,7 @@ def load_data():
     data["communications"].sort(key=lambda x: x["Date"], reverse=True)
     data["experiences"].sort(key=lambda x: x["StartDate"], reverse=True)
     data["projects"].sort(key=lambda x: x["StartDate"], reverse=True)
+    data["etudes"].sort(key=lambda x: x["StartDate"], reverse=True)
     return data
 
 def load_txt():
@@ -53,6 +54,8 @@ def load_txt():
             with open(f"{static}/{file}", 'r', encoding='utf-8') as f: 
                 name = os.path.basename(file).split(".")[0]
                 text = f.read()
+                text = text.replace("*", "·")
+                text = text.split("\n")
                 d[name] = text
     return d
 
@@ -71,10 +74,45 @@ def filter(data, skills):
                 any(f in post["Skills"].split(', ') for f in skills)
                 ]
             
-    emplois = [post for post in data["experiences"] if post["Type"] == "emploi" and (
-               any(f in post["Skills"].split(', ') for f in skills))]
+    #Changes actual job to today and adds the possibility of changing dateformat too. 
+    for category in data.keys(): 
+        if category not in ['user', 'skills', 'echeanciers', 'orgs']:
+            for post in data[category]:
+                if category == "communications":
+                    post["Date"] = datetime.strptime(post["Date"], "%Y-%m-%d").strftime("%Y")
+                else:
+                    post["StartDate"] = datetime.strptime(post["StartDate"], "%Y-%m-%d").strftime("%b %Y")
+                    if post["EndDate"] == "9999" or post["EndDate"] =="":
+                        post["EndDate"] = "auj.  "
+                    else:
+                        post["EndDate"] = datetime.strptime(post["EndDate"], "%Y-%m-%d").strftime("%b %Y")
+                
+
+    #Changes all * to · for neutral words (in french)
+    for category in data.keys(): 
+        if category not in ['user', 'echeanciers']:
+            for post in data[category]:
+                for entry in post.keys():
+                    try:
+                        post[entry] = post[entry].replace("*", "·")
+                    except:
+                        pass
     
-    return (highlighted_skills, skilled, data, emplois)
+    relevant_jobs = [post for post in data["experiences"] if post["Type"] == "emploi" and 
+                     any(f in post["Skills"].split(', ') for f in skills)][:2]
+    
+    emplois = [post for post in data["experiences"] if post["Type"] == "emploi" and post not in relevant_jobs]
+    
+    """emplois = [post for post in data["experiences"] if post["Type"] == "emploi" and ((
+               any(f in post["Skills"].split(', ') for f in skills)) and post not in relevant_jobs)]"""
+    
+    certif = [post for post in data["etudes"] if post["Type"] == "certification"]
+
+    """
+    Change all * to the stuff.
+    """
+    
+    return (highlighted_skills, skilled, data, emplois, certif, relevant_jobs)
 
 app = Flask(__name__)
 @app.route('/resume')
@@ -83,31 +121,44 @@ def resume():
     skills = ["Gestion de projets", "Analyse de données", "Soutien informatique"]
     FirstPage = 4
     data = load_data()
-    highlighted_skills, skilled, data, emplois = filter(data, skills)
-    return render_template('resume.html', data=data, emplois = emplois, FirstPage=FirstPage, highlighted_skills=highlighted_skills, skips=skips)
+    highlighted_skills, skilled, data, emplois, certif, relevant_jobs = filter(data, skills)
+    return render_template('resume.html', data=data, emplois = emplois, FirstPage=FirstPage, highlighted_skills=highlighted_skills, skips=skips, certif=certif, relevant_jobs=relevant_jobs)
 
 @app.route('/cover/<type>/<idKey>')
 def cover(idKey, type):
     data = load_data()
     org = [post for post in data["orgs"] if post["IdKey"] == idKey][0]
     skills = org["Skills"].split(', ')
-    highlighted_skills, skilled, data, emplois = filter(data, skills)
+    highlighted_skills, skilled, data, emplois, certif, relevant_jobs = filter(data, skills)
     FirstPage=4
     with open(f"static/txt/cv/{org['Type']}.txt", encoding="utf-8") as f:
         text = [line.replace("*", "·") for line in f]
 
     if type == "plain":
-        return render_template('cover_plain.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[])
+        return render_template('cover_plain.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
     
     else:
-        return render_template('cover.html', data=data, FirstPage=FirstPage, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[])
+        return render_template('cover.html', data=data, FirstPage=FirstPage, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
+
+@app.route('/<variable>')
+def generic(variable):
+    data = load_data()
+    texts = load_txt()
+    return render_template(f"/frq.html", variable=variable, data=data, texts=texts)
 
 @app.route('/frq/<item>')
 def frq(item):
     data = load_data()
     texts = load_txt()
     emplois = [post for post in data["experiences"] if post["Type"] == "emploi"]
-    return render_template(f"frq/{item}.html", data=data, item=item, texts=texts, emplois=emplois)
+    return render_template(f"/frq/{item}.html", data=data, item=item, texts=texts, emplois=emplois)
+
+@app.route('/crsh/<item>')
+def crsh(item):
+    data = load_data()
+    texts = load_txt()
+    emplois = [post for post in data["experiences"] if post["Type"] == "emploi"]
+    return render_template(f"/frq/{item}.html", data=data, item=item, texts=texts, emplois=emplois, crsh=True)
 
 @app.route("/gantt")
 def create_img():

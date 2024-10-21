@@ -21,20 +21,20 @@
               {% endif %}
             </p>
             
-            {% if org['Type'] == "generic" %}
+            
             <p class="mb">Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
             </p>
-            
+            {% if org['Type'] == "generic" %}
             <p class="mb">
-              Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0].lower() }}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }} qui me seront utiles pour le poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. 
-              Mes compétences en {{skilled[0]["Title"].lower()}} se sont développées {{skilled[0]["Description"].replace("*", "·")}}
-              J'ai aussi acquis des compétences en {{skilled[1]["Title"].lower()}} {{skilled[1]["Description"].replace("*", "·")}}
-              Enfin, mes compétences en {{skilled[2]["Title"].lower()}} se sont développées {{skilled[2]["Description"].replace("*", "·")}}            
+              Mon parcours professionnel m'a permis d'acquérir 5 années d'expérience en {{ highlighted_skills[0].lower() }}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }} qui me seront utiles pour le poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. 
+              Mes {{skilled[0]["Type"].lower()}} en {{skilled[0]["Title"].lower()}} se sont développés {{skilled[0]["Description"]}}
+              J'ai aussi acquis des {{skilled[1]["Type"].lower()}} en {{skilled[1]["Title"].lower()}} {{skilled[1]["Description"]}}
+              Enfin, mes {{skilled[2]["Type"].lower()}} en {{skilled[2]["Title"].lower()}} se sont développées {{skilled[2]["Description"]}}        
             </p>
 
           <p class="mb">{{ org["Filler"] }}</p>
           {% else %}
-            {% for line in text[1:] %}
+            {% for line in text %}
               <p class="mb">
                 {{ line|safe }}
               </p>
