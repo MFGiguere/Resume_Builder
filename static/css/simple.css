@@ -6,6 +6,10 @@
     position: running(themeRunning);
 }
 
+.nosplit {
+    break-inside:avoid;
+}
+
 body, .ytick {
     text-align:justify;
     font-size: 12pt;
@@ -35,13 +39,6 @@ body, .ytick {
 
 .nb {
     break-inside: avoid;
-}
-.mb {
-    margin-bottom: 12px;
-}
-
-.smb {
-    margin-bottom: 6px;
 }
 
 h2 {

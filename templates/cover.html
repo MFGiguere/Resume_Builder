@@ -12,7 +12,7 @@
                 </h1>
                 <div class="smallText">
                   <h3>
-                    Santé, Équité et Technologies
+                    {{ data['user'][0]["CatchPhrase"] }}
                   </h3>
                 </div>
               </div>
@@ -66,7 +66,7 @@
               {% endif %}
             </p>
             
-            {% if org['Type'] == "generic" %}
+            {% if org['Type'] == "" %}
             <p>Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste 
               {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
             </p>

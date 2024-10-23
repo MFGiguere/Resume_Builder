@@ -19,3 +19,11 @@
   .bolded {
     font-weight: bold;
   }
+
+  .mb {
+    margin-bottom: 12px;
+}
+
+.smb {
+    margin-bottom: 6px;
+}

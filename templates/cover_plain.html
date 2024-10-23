@@ -24,7 +24,7 @@
             
             <p class="mb">Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
             </p>
-            {% if org['Type'] == "generic" %}
+            {% if org['Type'] == "" %}
             <p class="mb">
               Mon parcours professionnel m'a permis d'acquérir 5 années d'expérience en {{ highlighted_skills[0].lower() }}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }} qui me seront utiles pour le poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. 
               Mes {{skilled[0]["Type"].lower()}} en {{skilled[0]["Title"].lower()}} se sont développés {{skilled[0]["Description"]}}

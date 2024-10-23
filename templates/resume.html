@@ -46,7 +46,7 @@
               Compétences
             </h2>
             <div class="smallText">
-                {% for post in data["skills"] if post["Theme"] == "competences" or post["Theme"] == "technical" %}
+                {% for post in data["skills"] if post["Type"] == "compétences" or post["Type"] == "technical" %}
                 {% if post["Title"] in highlighted_skills[:3] %}
                   <div class="skill bolded white"  style="margin-bottom:4px">
                 {% else %}
@@ -77,7 +77,7 @@
               Éducation
             </h2>
 
-            {% for post in data["experiences"] if post["Type"] == "etude" and not post["Title"] in skips %}
+            {% for post in data["etudes"] if post["Type"] == "etude" and not post["Title"] in skips %}
             
             <div class="smallText">
               <span class="bolded white" >
@@ -85,7 +85,6 @@
               </span>
               <p style="margin-bottom:16px">
                 {{ post['Organization'] }}
-                <!--, {{ post['StartDate'][:4] }} à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}-->
               </p>
             </div>
             {% endfor %}
@@ -103,7 +102,7 @@
           </h1>
           <div class="smallText">
             <h3>
-              Santé | Équité | Technologies
+              {{ data['user'][0]["CatchPhrase"] }}
             </h3>
           </div>
         </div>
@@ -121,17 +120,17 @@
         {% endif %}
         <div class="workExperience">
           <h2>
-            Expériences
+            Expériences récentes
           </h2>
           <ul>
-          {% for post in emplois[:FirstPage] if post["Title"] not in skips %}
+          {% for post in relevant_jobs[:2] if post["Title"] not in skips %}
             <li>
               <div class="jobPosition">
                 <span class="bolded">
                   {{ post['Title'] }}
                 </span> 
                 <span>
-                  {{ post['StartDate'][:4] }} à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}
+                  {{ post['StartDate'] }} à {% if post['EndDate'] %}{{ post['EndDate'] }}{% else %}auj.{% endif %}
                 </span>
               </div>
               <div class="projectName">
@@ -153,6 +152,25 @@
             </li>
             {% endfor %}
           </ul>
+
+          <h2>
+            Expériences récentes
+          </h2>
+          {% for post in emplois if post["Title"] not in skips %}
+              <div class="jobPosition">
+                <span class="bolded">
+                  {{ post['Title'] }}
+                </span> 
+                <span>
+                  {{ post['StartDate'] }} à {% if post['EndDate'] %}{{ post['EndDate'] }}{% else %}auj.{% endif %}
+                </span>
+              </div>
+              <div class="projectName smb">
+                <span>
+                  {{ post['Organization'] }}
+                </span> <span>({{ post['Time'] }})</span>
+              </div>
+            {% endfor %}
         </div>
       </div>
     </div>
@@ -167,7 +185,7 @@
             Prix et bourses
           </h2>
 
-          {% for post in data["skills"] if post["Theme"] == "award"%}
+          {% for post in data["skills"] if post["Type"] == "award"%}
           <div class="smallText">
             <div>
               <span class="bolded white">{{ post["Title"] }}</span>
@@ -189,7 +207,7 @@
           Certifications
         </h2>
         
-        {% for post in data["experiences"] if post["Type"] == "certification"%}
+        {% for post in data["etudes"] if post["Type"] == "certification"%}
         <div class="smallText">
         <div>
           <span class="bolded white">{{ post["Title"] }}</span>
@@ -200,7 +218,7 @@
           </div>
           <div class="YoEOfExperience">
           <span class="alignright"></span>
-          <span class="alignleft">{{ post['StartDate'][:4] }}</span>
+          <span class="alignleft">{{ post['StartDate'] }}</span>
           </div>
       </div></div>
         {% endfor %}

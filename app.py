@@ -1,15 +1,7 @@
-"""
-source venv/Scripts/activate
-export FLASK_DEBUG=1
-flask run
-"""
-
 from flask import Flask, render_template
 import csv, os, locale
 from datetime import datetime
-#import plotly.figure_factory as ff
-#import plotly.express as px
-from textwrap import wrap
+from parameters import parameters
 
 locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
@@ -60,8 +52,6 @@ def load_txt():
     return d
 
 def filter(data, skills):
-    if not "Philosophie" in skills and not "Services de santé" in skills:
-        skills.append("Services de santé")
     highlighted_skills = skills
     if len(skills) > 2:
         highlighted_skills = skills[:3]
@@ -69,7 +59,7 @@ def filter(data, skills):
     
     #Filter all categories so that only relevant skills are present
     for category in data.keys():
-        if category not in ['user', 'skills', 'echeanciers']:
+        if category not in ['user', 'skills']:
             data[category] = [post for post in data[category] if 
                 any(f in post["Skills"].split(', ') for f in skills)
                 ]
@@ -117,73 +107,48 @@ def filter(data, skills):
 app = Flask(__name__)
 @app.route('/resume')
 def resume():
-    skips = ["Maîtrise en philosophie", "Coordonnateur·trice du comité Techno-Secours"] #Things to skips
-    skills = ["Gestion de projets", "Analyse de données", "Soutien informatique"]
-    FirstPage = 4
+    
     data = load_data()
-    highlighted_skills, skilled, data, emplois, certif, relevant_jobs = filter(data, skills)
-    return render_template('resume.html', data=data, emplois = emplois, FirstPage=FirstPage, highlighted_skills=highlighted_skills, skips=skips, certif=certif, relevant_jobs=relevant_jobs)
+    highlighted_skills, skilled, data, emplois, certif, relevant_jobs = filter(data, parameters["skills"])
 
-@app.route('/cover/<type>/<idKey>')
-def cover(idKey, type):
+    resume = True
+    if parameters["type"] == "plain":
+        return render_template('resume_plain.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, skips=parameters["skips"], certif=certif, relevant_jobs=relevant_jobs, resume=resume)
+    elif parameters["type"] == "fancy":
+        return render_template('resume.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, skips=parameters["skips"], certif=certif, relevant_jobs=relevant_jobs, resume=resume)
+
+@app.route('/cover/<idKey>')
+def cover(idKey):
     data = load_data()
     org = [post for post in data["orgs"] if post["IdKey"] == idKey][0]
     skills = org["Skills"].split(', ')
     highlighted_skills, skilled, data, emplois, certif, relevant_jobs = filter(data, skills)
-    FirstPage=4
-    with open(f"static/txt/cv/{org['Type']}.txt", encoding="utf-8") as f:
-        text = [line.replace("*", "·") for line in f]
-
-    if type == "plain":
+    
+    #This if/else will check if a customized cover letter was setup for the experience
+    text = ""
+    if org['Type']:
+        with open(f"static/txt/cv/{org['Type']}.txt", encoding="utf-8") as f:
+            text = [line.replace("*", "·") for line in f]
+    
+    if parameters["type"] == "plain":
         return render_template('cover_plain.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
     
-    else:
-        return render_template('cover.html', data=data, FirstPage=FirstPage, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
-
-@app.route('/<variable>')
-def generic(variable):
-    data = load_data()
-    texts = load_txt()
-    return render_template(f"/frq.html", variable=variable, data=data, texts=texts)
+    elif parameters["type"] == "fancy":
+        return render_template('cover.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
 
 @app.route('/frq/<item>')
 def frq(item):
     data = load_data()
     texts = load_txt()
     emplois = [post for post in data["experiences"] if post["Type"] == "emploi"]
-    return render_template(f"/frq/{item}.html", data=data, item=item, texts=texts, emplois=emplois)
+    return render_template(f"/grant/{item}.html", data=data, item=item, texts=texts, emplois=emplois)
 
 @app.route('/crsh/<item>')
 def crsh(item):
     data = load_data()
     texts = load_txt()
     emplois = [post for post in data["experiences"] if post["Type"] == "emploi"]
-    return render_template(f"/frq/{item}.html", data=data, item=item, texts=texts, emplois=emplois, crsh=True)
-
-@app.route("/gantt")
-def create_img():
-    data = load_data()
-    df = [dict(Task=d['task'], Start=d['start'], Finish=d['end'], Resource=d["category"]) for d in data["echeanciers"]]
-    fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task", color="Resource", width=700, height=600)
-    fig.update_yaxes(showgrid=True)
-    fig.update_xaxes(showgrid=True)
-    fig.update_layout( # customize font and legend orientation & position
-    font_family="Times",
-    font_size=12,
-    margin=dict(l=20, r=20, t=20, b=20),
-    )
-    fig.update_layout(legend=dict(
-    orientation="h",
-    yanchor="bottom",
-    title="Catégories",
-    y=1.02,
-    xanchor="right",
-    x=1
-    ))
-    img = fig.to_html()
-    #fig.write_image("static/img/gantt.jpeg")
-    return  img
-
+    return render_template(f"/grant/{item}.html", data=data, item=item, texts=texts, emplois=emplois, crsh=True)
 
 if __name__ == '__main__':
    app.run(debug=True)    
