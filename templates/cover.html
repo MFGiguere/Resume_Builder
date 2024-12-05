@@ -54,41 +54,44 @@
             <p class="bolded ">
               Le {{ date }},
             </p>
-              <p class="bolded">
-                Objet: Candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}
-              </p>
-              
-            <p>
-              {% if org['HR'] %}
-                À l'attention de {{ org['HR'] }},
-              {% else %}
-                Au responsable des ressources humaines,
-              {% endif %}
+            {% if org["Type"] != "autonome" %}
+
+            <p class="bolded smb">
+              Objet: Candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}
             </p>
+          
             
-            {% if org['Type'] == "" %}
-            <p>Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste 
-              {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. Je suis actuellement aux études à temps partiel au doctorat et je souhaite continuer d'acquérir de l'expérience professionnelle tout en poursuivant mon projet d'études.
+          <p class="smb">
+            {% if org['HR'] %}
+              À l'attention {% if org['HR'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['HR'] }},
+            {% else %}
+              Au responsable des ressources humaines,
+            {% endif %}
+          </p>
+          <p class="smb">Actuellement à la recherche de nouveaux défis professionnels, je vous écris pour vous proposer ma candidature pour un poste {% if org['Job'].startswith(("A", "E", "I", "O", "U", "Y")) %}d'{% else %}de {% endif %}{{ org['Job'].lower() }}. {% if parameters["intro"] != "" %}{{ parameters["intro"] }}{% else %}{{ data['user'][0]["AboutMe"] }}{% endif %}
+          {% endif %}
+          </p>
+          {% if org['Type'] == "" %}
+          <p class="mb">
+            Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0].lower() }}{% if skilled[2] %}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }}{% endif %} {% if skilled[1] %}et {{ highlighted_skills[1].lower() }}{% endif %} qui me seront utiles pour le poste de {{ org['Job'].lower() }}. 
+            Mes {{skilled[0]["Type"].lower()}} en {{skilled[0]["Title"].lower()}} se sont développés {{skilled[0]["Description"]}}
+            {% if skilled[1] %}J'ai aussi acquis des {{skilled[1]["Type"].lower()}} en {{skilled[1]["Title"].lower()}} {{skilled[1]["Description"]}}{% endif %}
+            {% if skilled[2] %}Enfin, mes {{skilled[2]["Type"].lower()}} de {{skilled[2]["Title"].lower()}} se sont développées {{skilled[2]["Description"]}}{% endif %}         
+          </p>
+
+
+          <p>Je vous remercie vivement de l'attention que vous porterez à ma candidature et je reste à votre disposition pour toute information complémentaire ou pour convenir d'un entretien.</p> 
+
+        {% else %}
+          {% for line in text %}
+            <p class="smb">
+              {{ line|safe }}
             </p>
-            
-            <p>
-              Mon parcours professionnel m'a permis d'acquérir 7 années d'expérience en {{ highlighted_skills[0].lower() }}, {{ highlighted_skills[1].lower() }} et {{ highlighted_skills[2].lower() }} qui me seront utiles pour le poste de {{ org['Job'].lower() }}. 
-              Mes {{skilled[0]["Type"].lower()}} en {{skilled[0]["Title"].lower()}} se sont développés {{skilled[0]["Description"]}}
-              J'ai aussi acquis des {{skilled[1]["Type"].lower()}} en {{skilled[1]["Title"].lower()}} {{skilled[1]["Description"]}}
-              Enfin, mes {{skilled[2]["Type"].lower()}} de {{skilled[2]["Title"].lower()}} se sont développées {{skilled[2]["Description"]}}            
-            </p>
-          <p>{{ org["Filler"] }}</p>
-          {% else %}
-            {% for line in text[1:] %}
-              <p class="mb">
-                {{ line|safe }}
-              </p>
-            {% endfor %}
+          {% endfor %}
+
+
           {% endif %}
 
-
-            <p>Je vous remercie vivement de l'attention que vous porterez à ma candidature et je reste à votre disposition pour toute information complémentaire ou pour convenir d'un entretien. 
-            </p>
             <p>Au plaisir de vous rencontrer,
             </p>
             <p>

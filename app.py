@@ -29,7 +29,7 @@ def load_data():
     data = load()
     data["skills"].sort(key=lambda x: int(x["YoE"]), reverse=True)
     data["communications"].sort(key=lambda x: x["Date"], reverse=True)
-    data["experiences"].sort(key=lambda x: x["StartDate"], reverse=True)
+    data["experiences"].sort(key=lambda x: x["EndDate"], reverse=True)
     data["projects"].sort(key=lambda x: x["StartDate"], reverse=True)
     data["etudes"].sort(key=lambda x: x["StartDate"], reverse=True)
     return data
@@ -56,6 +56,11 @@ def filter(data, skills):
     if len(skills) > 2:
         highlighted_skills = skills[:3]
     skilled = [skill for skill in data["skills"] if skill['Title'] in highlighted_skills]
+
+    relevant_jobs = [post for post in data["experiences"] if post["Type"] == "emploi" and 
+                     any(f in post["Skills"].split(', ') for f in skills)][:2]
+    
+    skills = skills + parameters["skills"]
     
     #Filter all categories so that only relevant skills are present
     for category in data.keys():
@@ -84,12 +89,9 @@ def filter(data, skills):
             for post in data[category]:
                 for entry in post.keys():
                     try:
-                        post[entry] = post[entry].replace("*", "·")
+                        post[entry] = post[entry].replace("**", "·")
                     except:
                         pass
-    
-    relevant_jobs = [post for post in data["experiences"] if post["Type"] == "emploi" and 
-                     any(f in post["Skills"].split(', ') for f in skills)][:2]
     
     emplois = [post for post in data["experiences"] if post["Type"] == "emploi" and post not in relevant_jobs]
     
@@ -113,9 +115,9 @@ def resume():
 
     resume = True
     if parameters["type"] == "plain":
-        return render_template('resume_plain.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, skips=parameters["skips"], certif=certif, relevant_jobs=relevant_jobs, resume=resume)
+        return render_template('resume_plain.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, parameters=parameters, certif=certif, relevant_jobs=relevant_jobs, resume=resume)
     elif parameters["type"] == "fancy":
-        return render_template('resume.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, skips=parameters["skips"], certif=certif, relevant_jobs=relevant_jobs, resume=resume)
+        return render_template('resume.html', data=data, emplois = emplois, highlighted_skills=highlighted_skills, parameters=parameters, certif=certif, relevant_jobs=relevant_jobs, resume=resume)
 
 @app.route('/cover/<idKey>')
 def cover(idKey):
@@ -130,11 +132,11 @@ def cover(idKey):
         with open(f"static/txt/cv/{org['Type']}.txt", encoding="utf-8") as f:
             text = [line.replace("*", "·") for line in f]
     
-    if parameters["type"] == "plain":
-        return render_template('cover_plain.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
+    if parameters["type"] == "plain" or parameters["type"] == "fancy2":
+        return render_template('cover_plain.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs, parameters=parameters)
     
     elif parameters["type"] == "fancy":
-        return render_template('cover.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs)
+        return render_template('cover.html', data=data, emplois = emplois, cover=True, date=date, skills=skills, org=org, text=text, highlighted_skills=highlighted_skills, skilled=skilled, skips=[], certif=certif, relevant_jobs=relevant_jobs, parameters=parameters)
 
 @app.route('/frq/<item>')
 def frq(item):

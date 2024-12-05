@@ -1,0 +1,39 @@
+.leftPanel {
+  width: 31%;
+  background-color: black;
+  padding: 0.7cm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rightPanel {
+  width: 71%;
+  padding: 0.7cm;
+}
+
+.leftPanel  > * {
+  color:white;
+}
+
+.leftPanel  > .line  {
+  display:block !important;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+body, header {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+@page {
+  size: 21cm 29.7cm;}
+
+.line > #span > #b {
+  text-align:left;
+}

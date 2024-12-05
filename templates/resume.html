@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Julius+Sans+One&family=Open+Sans&family=Source+Sans+Pro&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/funky.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/common.css') }}">
+  <title>{{ data['user'][0]['LastName'] }}_resume</title>
 </head>
 
 <body>
@@ -120,7 +121,7 @@
         {% endif %}
         <div class="workExperience">
           <h2>
-            Expériences récentes
+            Expériences pertinentes
           </h2>
           <ul>
           {% for post in relevant_jobs[:2] if post["Title"] not in skips %}
@@ -154,7 +155,7 @@
           </ul>
 
           <h2>
-            Expériences récentes
+            Autres expériences récentes
           </h2>
           {% for post in emplois if post["Title"] not in skips %}
               <div class="jobPosition">
@@ -227,12 +228,12 @@
 
 
       <div class="rightPanel">
-        {% if data["communications"] %}
+        {% if "communications" in parameters["sections"] %}
         <div class="workExperience">
           <h2>
             Communications et publications récentes
           </h2>
-          {% for post in data["communications"][:10] %}
+          {% for post in data["communications"] if post["Type"] == "Article" and not post['Authors'] %}
               <div class="jobPosition">
                 <span class="bolded">
                   {{ post['Title'] }}
@@ -252,23 +253,19 @@
         {% if data["projects"] %}
         <div class="workExperience">
           <h2>
-            Projets technologiques
+            Réalisations technologiques
           </h2>
-          {% for post in data["projects"][:5] %}
+          {% for post in data["projects"][:7] %}
           <div class="jobPosition">
             <span class="bolded">
               {{ post['Title'] }}
             </span>
             <span>
-              {{ post['StartDate'][:4] }} {% if post['EndDate'][:4] != post['StartDate'][:4] %}à {% if post['EndDate'] %}{{ post['EndDate'][:4] }}{% else %}auj.{% endif %}{% endif %}
+              {{ post['StartDate'] }} {% if post['EndDate'] != post['StartDate'] %}à {% if post['EndDate'] %}{{ post['EndDate'] }}{% else %}auj.{% endif %}{% endif %}
             </span>
           </div>
           <div class="jobPosition">
-            <span class="bolded">
-              {{ post['Organization'] }}
-            </span>
-            <span>
-              <i>{{ post['Languages'] }}</i>
+            <span><i>{{ post['Organization'] }}</i> ({{ post["Lang"] }})</span>
             </span> 
           </div>
               <div class="projectName smallText">

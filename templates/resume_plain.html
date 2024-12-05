@@ -6,7 +6,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/simple.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/common.css') }}">
-  <title>{{ data['user'][0]['LastName'] }}_{{ idKey }}</title>
+  {% if parameters["type"] == "fancy2" %}<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/funky2.css') }}">{% endif %}
+  <title>{{ data['user'][0]['LastName'] }}_resume</title>
 </head>
 <page>
 <div>
@@ -25,7 +26,13 @@
   <page>
   {% endif %}
   <div class="content">
-
+    <div class ="leftPanel">
+      {% if not cover %}
+        <h2>À propos</h2>
+        <div class="smallText">
+          <p>{{ data['user'][0]["AboutMe"] }}</p>
+        </div>
+      {% endif %} 
     <h2>Études</h2>
     {% for post in data["etudes"] if post["Type"] == "etude" and not post["Title"] in skips %}
     <p class="mb"><div class="line"><span><b>{{ post["Title"] }}</b>, <i>{{ post['Organization'] }}</i> ({{ post['Grade'] }}/4,33)</span>
@@ -35,25 +42,22 @@
     <p>{% if post['Courses'] %}<b>Cours suivis</b>: {{ post['Courses'] }}{% endif %}</p>
     {% endfor %}
     
-    {% if certif %}
-    <h2>Certifications</h2>
-    {% endif %}
-    
-    {% for post in certif %}
-    <div class="line"><span><b>{{ post["Title"] }}</b>, <i>{{ post['Organization'] }}</i></span>
-      <span>{{ post['StartDate'] }}</span></div>
-    {% endfor %}
 
+    </div>
+
+    
+    <div class = "rightPanel">
     <h2>Expériences pertinentes</h2>
     {% for post in relevant_jobs %}
     <div class="nb"><div class="line"><b>{{ post["Title"] }}</b>
-    <span>{{ post['StartDate'] }} à {{ post['EndDate'] }}</span></div><p><i>{{ post['Organization'] }}</i> ({{ post['Time'] }})</p>
-    <ul class="mb">
+    <span>{{ post['StartDate'] }} à {{ post['EndDate'] }}</span></div><p class="nb"><i>{{ post['Organization'] }}</i> ({{ post['Time'] }})</p>
+    <p class="smb">{{ post['Tasks'].split('., ')[0] }}</p>
+    <!--ul class="mb">
       {% set list1 = post['Tasks'].split('., ') %}
       {% for item in list1 %}
           <li style="text-align:justify">{{ item }}</li>
       {% endfor %} 
-    </ul>
+    </ul-->
     </div>
     {% endfor %}
 
@@ -62,33 +66,43 @@
     <div class="line"><span><b>{{ post["Title"] }}</b></span>
       <span>{{ post['StartDate'] }} à {{ post['EndDate'] }}</span></div>
       <p class="mb"><i>{{ post['Organization'] }}</i> ({{ post['Time'] }})</p>
-    </div>
-    {% endfor %}
+    
+    {% endfor %}</div>
     </page>
     <page>
-    <h2>Autres réalisations</h2>
+      {% if "certifications" in parameters["sections"] %}
+      <h2>Certifications</h2>
+      
+      
+      {% for post in certif %}
+      <div class="line"><span><b>{{ post["Title"] }}</b>, <i>{{ post['Organization'] }}</i></span>
+        <span>{{ post['StartDate'] }}</span></div>
+      {% endfor %}
+      {% endif %}
+      <h2>Autres réalisations</h2>
     <h3>Conférences</h3>
     {% for post in data["communications"] if post["Type"] == "Conférence" or post["Type"] == "Affiche" %}
     <p class="smb">{% if post['Authors'] %}{{ post['Authors'] }}{% else %}Giguère, M. F.{% endif %} ({{ post['Date'] }}). <a href="{{post['Url']}}">{{ post['Title'] }}</a>. <i>{{ post['Organization'] }}</i>{% if post['Context'] %} [{{ post['Context'] }}]{% endif %}, {{ post['Location'] }}.</p>
-    {% endfor %}
+    {% endfor %}</div>
     
       <h3>Publications</h3>
-    {% for post in data["communications"] if post["Type"] == "Article"%}
+    {% for post in data["communications"] if post["Type"] == "Article" and not post['Authors'] %}
     <p class="smb">{% if post['Authors'] %}{{ post['Authors'] }}{% else %}Giguère, M. F.{% endif %} ({{ post['Date'] }}). <a href="{{post['Url']}}">{% if post["Type"] == "Ouvrage" %}<i>{{ post['Title'] }}</i>{% else %}{{ post['Title'] }}{% endif %}</a>. {% if post["Type"] != "Ouvrage" %}<i>{{ post['Organization'] }}</i>{% else %}{{ post['Organization'] }}{% endif %}{% if post['Context'] %} [{{ post['Context'] }}]{% endif %}.</p>
     {% endfor %}
-
+      {% if "benevolat" in parameters["sections"] %}
       <h3>Bénévolat</h3>
       {% for post in data["experiences"] if post["Type"] == "benevolat" %}
       <div class="line"><span><b>{{ post["Title"] }}</b></span>
         <span>{{ post['StartDate'] }} à {{ post['EndDate'] }}</span></div>
         <p class="mb"><i>{{ post['Organization'] }}</i>: {{ post['Tasks'] | safe }}</p>
-        {% endfor %}
+      {% endfor %}
+      {% endif %}
     </div>
     </div>
 
     {% if data["projects"] %}
       <h3>Projets technologiques</h3>
-      {% for post in data["projects"][:3] %}
+      {% for post in data["projects"][:2] %}
       <div class="line"><span><b>{{ post["Title"] }}</b>{% if post["Url"] %} (<a href="{{ post['Url'] }}">lien</a>){% endif %}</span>
         <span>{{ post['StartDate'] }} à {{ post['EndDate'] }}</span></div>
         <p><i>{{ post['Organization'] }}</i> ({{ post["Lang"] }})</p>
