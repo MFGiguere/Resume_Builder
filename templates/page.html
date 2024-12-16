@@ -34,9 +34,9 @@
       </div>
     </div>
 
-    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light"  id="Services">
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light text-justify"  id="Services">
       <div class="col-md-8 p-lg-5 mx-auto my-5">
-        <h1 class="display-4 font-weight-normal">Services</h1>
+        <h1 class="display-4 font-weight-normal text-center">Services</h1>
         <p class="lead font-weight-normal">Les services mfgiguere sont plus que du simple soutien informatique: ce sont des services adaptés aux petites organisations qui les aident à se concentrer sur leur mission plutôt que de perdre du temps avec des outils informatiques inefficaces. Il ne s'agit pas que de corriger des bogues, mais plutôt d'augmenter l'efficacité organisationnelle et d'aider à développer une autonomie sur le plan informatique.</p>
         <p class="lead font-weight-normal">Les services sont offerts par Maxe F. Giguère, qui effectue actuellement un doctorat en informatique de la santé et détient une maîtrise en éthique médicale et une certification professionnelle en analyse de données. Maxe a aussi contribué au déploiement de dossier médicaux électroniques dans une vingtaine de cliniques médicales, a offert du soutien informatique dans un réseau de 14 organismes communautaires et a coordonné un comité étudiant de soutien informatique. Apprenez-en plus sur son parcours via son profil <a href="https://www.linkedin.com/in/mfgiguere/">LinkedIn</a>!</p>
         <p class="lead font-weight-normal">Les services mfgiguere sont nés du constat que les technologies constituent actuellement un frein dans les milieux communautaires, de la recherche et de la santé alors qu'elles pourraient être un levier pour le changement social. Ils sont offerts par une personne qui a un parcours social plutôt qu'en génie logiciel, ce qui permet une approche humaine et centrée sur les besoins des organisations. Les services sont adaptés aux petits projets et aux petits budgets.</p>
@@ -46,9 +46,9 @@
     </div>
 
 
-    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" id="Projets réalisés">
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light text-justify" id="Projets réalisés">
       <div class="col-md-8 p-lg-5 mx-auto my-5">
-          <h2 class="display-5" >Projets réalisés</h2>
+          <h2 class="display-5 text-center" >Projets réalisés</h2>
           <p class="lead font-weight-normal">Depuis 2022, mfgiguere offre des services de soutien informatique dans les milieux communautaire et académique. Principalement déployés par le bouche à oreille, ces services ont permis de réaliser les projets suivants : </p>
           <ul class="text">{% for projet in data["projects"] if projet['Type'] =="communautaire" or projet['Type'] == "académique" %}
             <li><b>{{ projet['Title'] }} (milieu {{ projet['Type'] }}, {{projet['StartDate'][:4]}})</b>: {{ projet['Description'] }}
@@ -57,9 +57,9 @@
         </div>
       </div>
 
-      <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+      <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 bg-light text-justify">
         <div class="col-md-8 p-lg-5 mx-auto my-5">
-          <h2 class="display-5" id="Prix">Prix</h2>
+          <h2 class="display-5 text-center" id="Prix">Prix</h2>
           <p class="lead font-weight-normal">Les services offerts sont au tarif de 60$/h et sont généralement offerts sous forme de banque d'heures de services. Les services peuvent aussi être offerts dans le cadre de contrats d'auxiliaire de recherche en suivant les conventions de travail des instituts de recherche.</p>
           <p class="lead font-weight-normal">Le prix des services est sujet à augmentation en fonction de la demande. Sachez toutefois que les contrats qui sont renouvellés ne seront jamais sujets à une augmentation de prix.</p>
           <p class="lead font-weight-normal">Pour une durée limitée, à l'occasion du lancement de ce service, les organisations bénéficient d'une réduction de 25% sur le prix du service. Ne tardez pas! </p>
