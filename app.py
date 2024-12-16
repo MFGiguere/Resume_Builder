@@ -107,6 +107,12 @@ def filter(data, skills):
     return (highlighted_skills, skilled, data, emplois, certif, relevant_jobs)
 
 app = Flask(__name__)
+
+@app.route('/')
+def webaPage():
+    data = load_data()
+    return render_template('page.html', data=data)
+
 @app.route('/resume')
 def resume():
     

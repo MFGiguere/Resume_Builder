@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/website.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&family=Julius+Sans+One&family=Open+Sans&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  <title>{{ data['user'][0]['LastName'] }}_Services de soutien informatique</title>
+</head>
+
+{% block body %}
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+              {% for button in ['Services', 'Projets réalisés', 'Prix', 'Contact']%}
+              <a class="py-2 d-md-inline-block px-3" href="#{{button}}" style="font-size: 1.5rem">{{button}}</a>
+              {% endfor %}
+            </li>
+          </ul>
+          <a class="btn btn-primary ml-auto px-4" href="mailto:{{ data['user'][0]['Email'] }}?subject=Demande de services - mfgiguere &body=Bonjour, je souhaiterais obtenir des services de soutien informatique (PRÉCISEZ LE TYPE DE SERVICES). Serait-il possible de se rencontrer virtuellement cette semaine? Je suis disponible aux moments suivants: . Merci">Obtenir le service</a>
+
+    </div>          
+    </nav>
+
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+      <div class="col-md-5 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal">Soutien mfgiguere</h1>
+        <p class="lead font-weight-normal">Des services de soutien informatique adaptés aux petites organisations, qu'elles soient dans le milieu communautaire, du travail autonome ou de la recherche.</p>
+        <a class="btn btn-outline-secondary" href="#Services">Détails</a>
+      </div>
+    </div>
+
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light"  id="Services">
+      <div class="col-md-8 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal">Services</h1>
+        <p class="lead font-weight-normal">Les services offerts par mfgiguere sont adaptés aux besoins de votre organisation. Ils sont offerts par une personne qui a étudié en sciences sociales et développé ses compétences techniques dans le milieu de la recherche et le milieu communautaire. Ce parcours a permis d'acquérir des compétences adaptées aux petites organisations et d'offrir un service complémentaire aux services offerts par les compagnies informatiques et par les services informatiques académiques. Les services offerts par mfgiguere sont les suivants:</p>
+        <ul><li><b>Formations</b>: Offrir des cours de groupe ou individuels sur des logiciels courants (Teams, Word, etc.) ou des sur des sujets importants (sécurité informatique, gestion de sites web, gestion des accès, etc.)</li><li><b>Automatisation</b>: Évaluer des processus existants et identifier des opportunités d'automatisation. Développer et mettre en œuvre des solutions d'automatisation personnalisées pour optimiser l'efficacité opérationnelle. Former le personnel aux nouveaux processus.</li><li><b>Analyse de données</b>: Définir une stratégie de collectes et d'organisation de données pertinentes pour votre organisme. Analyser ces données pour identifier des tendances, des opportuni   tés ou des défis. Présenter les résultats de l'analyse avec des recommandations pour l'action.</li><li><b>Soutien individualisé</b>: Offrir de l'assistance téléphonique et par email pour résoudre les problèmes informatiques courants. Maintenir préventivement et correctivement des équipements et applications informatiques.</li></ul>
+      </div>
+    </div>
+
+
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light" id="Projets réalisés">
+      <div class="col-md-8 p-lg-5 mx-auto my-5">
+          <h2 class="display-5" >Projets réalisés</h2>
+          <p class="lead font-weight-normal">Depuis 2022, mfgiguere offre des services de soutien informatique dans les milieux communautaire et académique. Principalement déployés par le bouche à oreille, ces services ont permis de réaliser les projets suivants : </p>
+          <ul>{% for projet in data["projects"] if projet['Type'] =="communautaire" or projet['Type'] == "académique" %}
+            <li><b>{{ projet['Title'] }} (milieu {{ projet['Type'] }}, {{projet['StartDate'][:4]}})</b>: {{ projet['Description'] }}
+            </li>{% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+        <div class="col-md-8 p-lg-5 mx-auto my-5">
+          <h2 class="display-5" id="Prix">Prix</h2>
+          <p class="lead font-weight-normal">Les services offerts sont au tarif de 60$/h et sont généralement offerts sous forme de banque d'heures de services. Des montants forfaitaires peuvent aussi être . Les services peuvent aussi être offerts dans le cadre de contrats d'auxiliaire de recherche en suivant les conventions de travail des instituts de recherche.</p>
+          <p class="lead font-weight-normal">Le prix des services est sujet à augmentation en fonction de la demande. Sachez toutefois que les contrats qui sont renouvellés ne seront jamais sujets à une augmentation de prix.</p>
+          <p class="lead font-weight-normal">Pour une durée limitée, à l'occasion du lancement de ce service, les organisations bénéficient d'une réduction de 25% sur le prix du service. Ne tardez pas! </p>
+        </div></div>
+      
+ {% endblock %}
+
+
+    <footer class="container" id="Contact">
+      <div class="mr-md-3 pt-3 px-3 px-md-5 text-center overflow-hidden">
+        <div class="my-3 p-3">
+          <h5>Contact</h5>
+          <p>
+            <i class="fa fa-phone contactIcon" aria-hidden="true"></i>
+            {{ data['user'][0]["Phone"] }}
+          </p>
+          <p>
+            <i class="fa fa-envelope contactIcon" aria-hidden="true"></i>
+            <a href="mailto:{{ data['user'][0]['Email'] }}" style="overflow: hidden;
+            direction: rtl; ">
+              {{ data['user'][0]["Email"] }}
+            </a>
+          </p>
+          <p>
+            <i class="fa fa-map-marker contactIcon" aria-hidden="true"></i>
+            {{ data['user'][0]["City"] }}
+          </p>
+          <small class="d-block mb-3">© Maxe F. Giguère 2024</small>
+        </div>
+      </div>
+    </footer>
+</body>

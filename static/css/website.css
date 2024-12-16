@@ -1,0 +1,36 @@
+:root {
+    --primary: #adc2eb;
+    --secondary: #bf4080;
+    --light: #ccccff;
+    --dark : #333333;
+}
+
+body, nav {
+    background-color: var(--dark);
+}
+
+a, footer {
+    color: var(--primary)
+}
+
+html { scroll-behavior: smooth; }
+
+a:hover  {
+    color: var(--secondary);
+    transition: 0.3s;
+}
+
+ul {
+    list-style-type: none;
+  }
+  li {font-size:1.25rem; padding-left: 2em; text-indent: -2em; padding-bottom:1em;}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover, .btn-primary:active  {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
