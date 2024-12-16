@@ -23,7 +23,8 @@ a:hover  {
 ul {
     list-style-type: none;
   }
-  li {font-size:1.25rem; padding-left: 2em; text-indent: -2em; padding-bottom:1em;}
+  
+ul.text li {font-size:1.25rem; padding-left: 2em; text-indent: -2em; padding-bottom:1em;}
 
 .btn-primary {
     background-color: var(--primary);
